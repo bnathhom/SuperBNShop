@@ -332,6 +332,11 @@
         width: 100%;
         margin-bottom: 10px;
       }
+      #orderCounter {
+        margin-left: 10px;
+        font-weight: normal;
+        color: var(--dark-color);
+      }  
     }
   </style>
 </head>
@@ -366,7 +371,7 @@
     <!-- Current Orders Section -->
     <div id="currentOrdersSection">
       <div class="card">
-        <h2><i class="fas fa-plus-circle"></i> เพิ่มออเดอร์ใหม่</h2>
+        <h2><i class="fas fa-plus-circle"></i> เพิ่มออเดอร์ใหม่ <span id="orderCounter" style="font-size: 0.8em; color: #666;"></span></h2>
         <div class="form-control">
           <label>ข้อมูลลูกค้า</label>
           <textarea id="customerData" rows="4"></textarea>
@@ -701,6 +706,7 @@
         
         renderOrders();
         document.getElementById('currentOrdersSection').style.display = 'block';
+        document.getElementById('orderCounter').textContent = (${orderList.length} ออเดอร์);
         
         // Load archived orders
         const archiveQ = query(
@@ -834,7 +840,10 @@
     window.renderOrders = function() {
       const container = document.getElementById('orders');
       container.innerHTML = '';
-      
+  
+      // เพิ่มตัวนับออเดอร์
+      document.getElementById('orderCounter').textContent = (${orderList.length} ออเดอร์);
+  
       if (orderList.length === 0) {
         container.innerHTML = '<p style="text-align: center; color: #666;">ไม่มีออเดอร์ในขณะนี้</p>';
         return;
