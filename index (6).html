@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BN Shop Order System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --danger-color: #f72585;
+      --success-color: #4cc9f0;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+    }
+    
+    body { 
+      font-family: 'Noto Sans Lao', sans-serif; 
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+    }
+
+    .navbar {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
+    
+    .navbar-brand i {
+      margin-right: 10px;
+    }
+
+    .order-counter {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .order-counter i {
+      margin-right: 5px;
+    }
+    
+    .auth-buttons button {
+      margin-left: 10px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    h1, h2, h3 {
+      color: var(--primary-color);
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .btn i {
+      margin-right: 8px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #d1145a;
+    }
+    
+    .btn-success {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background-color: #3aa8d1;
+    }
+    
+    .form-control {
+      margin-bottom: 15px;
+    }
+    
+    .form-control label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    
+    .form-control input, 
+    .form-control textarea, 
+    .form-control select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      font-family: 'Noto Sans Lao', sans-serif;
+    }
+    
+    .form-control textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .order {
+      border: 1px solid #eee;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      position: relative;
+      transition: all 0.3s;
+    }
+    
+    .order:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .order input[type=checkbox] {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      transform: scale(1.3);
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .print-btns {
+      margin-top: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .bill {
+      width: 76mm; 
+      height: auto; 
+      min-height: 130mm;
+      padding: 10px; 
+      font-size: 14px; 
+      box-sizing: border-box;
+      border: 1px solid #000; 
+      margin: 0 auto; 
+      overflow: hidden;
+      font-family: 'Noto Sans Lao', sans-serif;
+      background: white;
+    }
+    
+    .logo { 
+      font-size: 48px; 
+      font-weight: bold; 
+      display: inline-block; 
+      vertical-align: middle; 
+      margin-right: 10px; 
+      color: var(--primary-color);
+    }
+    
+    .shop-info { 
+      display: inline-block; 
+      vertical-align: middle; 
+      line-height: 1.4; 
+      white-space: nowrap; 
+    }
+    
+    .header { margin-bottom: 10px; }
+    .section { margin-top: 10px; }
+    
+    .barcode-container { 
+      text-align: center; 
+      margin: 15px 0; 
+    }
+    
+    .barcode-number { 
+      text-align: center; 
+      font-family: monospace; 
+      font-size: 12px; 
+      margin-top: 5px; 
+    }
+    
+    .thankyou { 
+      text-align: center; 
+      margin-top: 20px; 
+      font-weight: bold; 
+    }
+
+    pre { 
+      white-space: pre-wrap; 
+      word-wrap: break-word; 
+      margin: 0; 
+      line-height: 1.4; 
+    }
+    
+    /* Auth Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      overflow: auto;
+    }
+    
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #aaa;
+    }
+    
+    .close:hover {
+      color: var(--dark-color);
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+    
+    .tab.active {
+      border-bottom: 3px solid var(--primary-color);
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Archive Section */
+    .archive-section {
+      display: none;
+    }
+    
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .search-section {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .search-section .form-control {
+      margin-bottom: 10px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+      }
+      
+      .order-counter {
+        margin: 10px 0;
+        order: 2;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .auth-buttons {
+        margin-top: 15px;
+      }
+      
+      .print-btns {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .print-btns .btn {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="navbar-brand">
+      <i class="fas fa-store"></i>
+      <span>BN Shop Order System</span>
+    </div>
+    <div class="order-counter" id="orderCounter">
+      <i class="fas fa-shopping-cart"></i> ออเดอร์ปัจจุบัน: <span id="currentOrderCount">0</span>
+    </div>
+    <div class="auth-buttons" id="authButtons">
+      <button class="btn btn-primary" onclick="openModal('authModal')">
+        <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+      </button>
+      <button class="btn btn-success" onclick="openModal('authModal', 'register')">
+        <i class="fas fa-user-plus"></i> สร้างบัญชี
+      </button>
+    </div>
+    <div class="user-menu" id="userMenu" style="display: none;">
+      <span id="userEmail" style="margin-right: 15px; color: white;"></span>
+      <button class="btn btn-success" onclick="showArchive()">
+        <i class="fas fa-archive"></i> ดูคลังออเดอร์
+      </button>
+      <button class="btn btn-danger" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Current Orders Section -->
+    <div id="currentOrdersSection">
+      <div class="card">
+        <h2><i class="fas fa-plus-circle"></i> เพิ่มออเดอร์ใหม่</h2>
+        <div class="form-control">
+          <label>ข้อมูลลูกค้า</label>
+          <textarea id="customerData" rows="4"></textarea>
+        </div>
+        <div class="form-control">
+          <label>เลือกขนส่ง</label>
+          <select id="courier">
+            <option value="HAL LOGISTICS">HAL LOGISTICS</option>
+            <option value="Anousith Express">Anousith Express</option>
+            <option value="Mixay Express">Mixay Express</option>
+          </select>
+        </div>
+        <div class="form-control">
+          <label>เบอร์โทรร้าน (เปลี่ยนอัตโนมัติตามขนส่ง)</label>
+          <select id="shopPhone" disabled>
+            <option value="020 94036226">020 94036226</option>
+            <option value="020 98052744">020 98052744</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="addOrder()">
+          <i class="fas fa-check"></i> ยืนยันออเดอร์
+        </button>
+      </div>
+
+      <div class="card">
+        <h2><i class="fas fa-list"></i> ออเดอร์ทั้งหมด</h2>
+        <div style="text-align:center; margin-bottom: 15px;">
+          <button class="btn btn-primary" onclick="selectAll(true)">
+            <i class="fas fa-check-square"></i> เลือกทั้งหมด
+          </button>
+          <button class="btn btn-primary" onclick="selectAll(false)">
+            <i class="fas fa-square"></i> ยกเลิกทั้งหมด
+          </button>
+          <button class="btn btn-success" onclick="archiveSelected()">
+            <i class="fas fa-archive"></i> เก็บเข้าคลัง
+          </button>
+        </div>
+        <div id="orders"></div>
+        <div class="print-btns">
+          <button class="btn btn-primary" onclick="printSelected()">
+            <i class="fas fa-print"></i> พิมพ์ที่เลือก
+          </button>
+          <button class="btn btn-primary" onclick="printAll()">
+            <i class="fas fa-print"></i> พิมพ์ทั้งหมด
+          </button>
+          <button class="btn btn-danger" onclick="deleteSelected()">
+            <i class="fas fa-trash"></i> ลบที่เลือก
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Archive Section -->
+    <div class="card archive-section" id="archiveSection">
+      <h2><i class="fas fa-archive"></i> คลังออเดอร์</h2>
+      <button class="btn btn-primary" onclick="backToCurrentOrders()">
+        <i class="fas fa-arrow-left"></i> กลับไปออเดอร์ปัจจุบัน
+      </button>
+  
+      <!-- เพิ่มส่วนค้นหา -->
+      <div class="search-section" style="margin-top: 20px;">
+        <div class="form-control">
+          <label>ค้นหาออเดอร์</label>
+          <input type="text" id="searchOrderId" placeholder="ค้นหาตามเลขออเดอร์ (BN...)">
+        </div>
+        <div class="form-control">
+          <label>ค้นหาตามวันที่</label>
+          <div style="display: flex; gap: 10px;">
+            <input type="date" id="searchStartDate">
+            <span>ถึง</span>
+            <input type="date" id="searchEndDate">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="searchArchivedOrders()">
+          <i class="fas fa-search"></i> ค้นหา
+        </button>
+        <button class="btn btn-danger" onclick="clearSearch()">
+          <i class="fas fa-times"></i> ล้างการค้นหา
+        </button>
+      </div>
+  
+      <div id="archivedOrders" style="margin-top: 20px;"></div>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('authModal')">&times;</span>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('login')">เข้าสู่ระบบ</div>
+        <div class="tab" onclick="switchTab('register')">สร้างบัญชี</div>
+      </div>
+      
+      <div id="loginTab" class="tab-content active">
+        <h3>เข้าสู่ระบบ</h3>
+        <div class="form-control">
+          <label>อีเมล</label>
+          <input type="email" id="loginEmail" placeholder="กรอกอีเมลของคุณ">
+        </div>
+        <div class="form-control">
+          <label>รหัสผ่าน</label>
+          <input type="password" id="loginPassword" placeholder="กรอกรหัสผ่าน">
+        </div>
+        <button class="btn btn-primary" onclick="login()" id="loginBtn">
+          <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+        </button>
+        <div id="loginError" style="color: var(--danger-color); margin-top: 10px;"></div>
+      </div>
+      
+      <div id="registerTab" class="tab-content">
+        <h3>สร้างบัญชีใหม่</h3>
+        <div class="form-control">
+          <label>อีเมล</label>
+          <input type="email" id="registerEmail" placeholder="กรอกอีเมลของคุณ">
+        </div>
+        <div class="form-control">
+          <label>รหัสผ่าน</label>
+          <input type="password" id="registerPassword" placeholder="กรอกรหัสผ่าน (อย่างน้อย 6 ตัว)">
+        </div>
+        <div class="form-control">
+          <label>ยืนยันรหัสผ่าน</label>
+          <input type="password" id="registerConfirmPassword" placeholder="กรอกรหัสผ่านอีกครั้ง">
+        </div>
+        <button class="btn btn-success" onclick="register()" id="registerBtn">
+          <i class="fas fa-user-plus"></i> สร้างบัญชี
+        </button>
+        <div id="registerError" style="color: var(--danger-color); margin-top: 10px;"></div>
+      </div>
+    </div>
+        </div>
+
+  <!-- Edit Order Modal -->
+  <div id="editOrderModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('editOrderModal')">&times;</span>
+      <h3>แก้ไขออเดอร์</h3>
+      <div class="form-control">
+        <label>ข้อมูลลูกค้า</label>
+        <textarea id="editCustomerData" rows="4"></textarea>
+      </div>
+      <div class="form-control">
+        <label>เลือกขนส่ง</label>
+        <select id="editCourier">
+          <option value="HAL LOGISTICS">HAL LOGISTICS</option>
+          <option value="Anousith Express">Anousith Express</option>
+          <option value="Mixay Express">Mixay Express</option>
+        </select>
+      </div>
+      <div class="form-control">
+        <label>เบอร์โทรร้าน</label>
+        <select id="editShopPhone" disabled>
+          <option value="020 94036226">020 94036226</option>
+          <option value="020 98052744">020 98052744</option>
+        </select>
+      </div>
+      <input type="hidden" id="editOrderId">
+      <button class="btn btn-primary" onclick="updateOrder()" id="updateOrderBtn">
+        <i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง
+      </button>
+      <div id="editOrderError" style="color: var(--danger-color); margin-top: 10px;"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc,
+      query, where, orderBy
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { 
+      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
+      signOut, onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAR4ZN_J3u4nTl2dLpF6eXqE3txaUoYrMY",
+      authDomain: "bnchen-93d9d.firebaseapp.com",
+      projectId: "bnchen-93d9d",
+      storageBucket: "bnchen-93d9d.appspot.com",
+      messagingSenderId: "1047651812089",
+      appId: "1:1047651812089:web:6f520fa528059cc43e1828",
+      measurementId: "G-WK259X0ZQ1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    
+    let orderList = [];
+    let archivedOrderList = [];
+    let currentUser = null;
+
+    // ฟังก์ชันอัปเดตตัวนับออเดอร์
+    window.updateOrderCounter = function() {
+      const counterElement = document.getElementById('currentOrderCount');
+      const counterBox = document.getElementById('orderCounter');
+      
+      counterElement.textContent = orderList.length;
+      
+      // เปลี่ยนสีเมื่อมีออเดอร์
+      if (orderList.length > 0) {
+        counterBox.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+      } else {
+        counterBox.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+      }
+    };
+
+    // Initialize the app
+    window.onload = () => {
+      updatePhoneByCourier();
+      document.getElementById('courier').addEventListener('change', updatePhoneByCourier);
+      document.getElementById('editCourier').addEventListener('change', updateEditPhoneByCourier);
+      
+      // Listen for auth state changes
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          currentUser = user;
+          document.getElementById('userEmail').textContent = user.email;
+          document.getElementById('authButtons').style.display = 'none';
+          document.getElementById('userMenu').style.display = 'block';
+          loadOrders();
+        } else {
+          currentUser = null;
+          document.getElementById('authButtons').style.display = 'block';
+          document.getElementById('userMenu').style.display = 'none';
+          document.getElementById('currentOrdersSection').style.display = 'none';
+          document.getElementById('archiveSection').style.display = 'none';
+        }
+      });
+    };
+
+    // Auth Functions
+    window.openModal = function(modalId, tabName = 'login') {
+      document.getElementById(modalId).style.display = 'block';
+      if (tabName) {
+        switchTab(tabName);
+      }
+    };
+
+    window.closeModal = function(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+      // Clear errors
+      document.getElementById('loginError').textContent = '';
+      document.getElementById('registerError').textContent = '';
+      document.getElementById('editOrderError').textContent = '';
+    };
+
+    window.switchTab = function(tabName) {
+      // Switch tabs in auth modal
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      if (tabName === 'login') {
+        document.querySelector('.tab:nth-child(1)').classList.add('active');
+        document.getElementById('loginTab').classList.add('active');
+      } else {
+        document.querySelector('.tab:nth-child(2)').classList.add('active');
+        document.getElementById('registerTab').classList.add('active');
+      }
+    };
+
+    window.login = async function() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const loginBtn = document.getElementById('loginBtn');
+      const errorElement = document.getElementById('loginError');
+      
+      if (!email || !password) {
+        errorElement.textContent = 'กรุณากรอกอีเมลและรหัสผ่าน';
+        return;
+      }
+      
+      try {
+        loginBtn.innerHTML = '<i class="fas fa-spinner spinner"></i> กำลังเข้าสู่ระบบ...';
+        await signInWithEmailAndPassword(auth, email, password);
+        closeModal('authModal');
+      } catch (error) {
+        console.error('Login error:', error);
+        errorElement.textContent = getAuthErrorMessage(error.code);
+      } finally {
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ';
+      }
+    };
+
+    window.register = async function() {
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+      const registerBtn = document.getElementById('registerBtn');
+      const errorElement = document.getElementById('registerError');
+      
+      if (!email || !password || !confirmPassword) {
+        errorElement.textContent = 'กรุณากรอกข้อมูลให้ครบทุกช่อง';
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        errorElement.textContent = 'รหัสผ่านไม่ตรงกัน';
+        return;
+      }
+      
+      if (password.length < 6) {
+        errorElement.textContent = 'รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร';
+        return;
+      }
+      
+      try {
+        registerBtn.innerHTML = '<i class="fas fa-spinner spinner"></i> กำลังสร้างบัญชี...';
+        await createUserWithEmailAndPassword(auth, email, password);
+        closeModal('authModal');
+      } catch (error) {
+        console.error('Registration error:', error);
+        errorElement.textContent = getAuthErrorMessage(error.code);
+      } finally {
+        registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> สร้างบัญชี';
+      }
+    };
+
+    window.logout = async function() {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('เกิดข้อผิดพลาดในการออกจากระบบ: ' + error.message);
+      }
+    };
+
+    function getAuthErrorMessage(errorCode) {
+      switch(errorCode) {
+        case 'auth/invalid-email':
+          return 'อีเมลไม่ถูกต้อง';
+        case 'auth/user-disabled':
+          return 'บัญชีนี้ถูกระงับการใช้งาน';
+        case 'auth/user-not-found':
+          return 'ไม่พบผู้ใช้ที่ใช้อีเมลนี้';
+        case 'auth/wrong-password':
+          return 'รหัสผ่านไม่ถูกต้อง';
+        case 'auth/email-already-in-use':
+          return 'อีเมลนี้ถูกใช้งานแล้ว';
+        case 'auth/weak-password':
+          return 'รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร';
+        default:
+          return 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
+      }
+    }
+
+    // Order Functions
+    window.loadOrders = async function() {
+      if (!currentUser) return;
+      
+      try {
+        // Load current orders
+        const q = query(
+          collection(db, "orders"), 
+          where("userId", "==", currentUser.uid),
+          where("archived", "==", false),
+          orderBy("date", "desc")
+        );
+        const querySnapshot = await getDocs(q);
+        
+        orderList = [];
+        querySnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          data.date = new Date(data.date);
+          data._docId = docSnap.id;
+          orderList.push(data);
+        });
+        
+        // อัปเดตตัวนับออเดอร์
+        updateOrderCounter();
+        renderOrders();
+        document.getElementById('currentOrdersSection').style.display = 'block';
+        
+        // Load archived orders
+        const archiveQ = query(
+          collection(db, "orders"), 
+          where("userId", "==", currentUser.uid),
+          where("archived", "==", true),
+          orderBy("date", "desc")
+        );
+        const archiveSnapshot = await getDocs(archiveQ);
+        
+        archivedOrderList = [];
+        archiveSnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          data.date = new Date(data.date);
+          data._docId = docSnap.id;
+          archivedOrderList.push(data);
+        });
+      } catch (error) {
+        console.error("Error loading orders:", error);
+        alert("เกิดข้อผิดพลาดในการโหลดออเดอร์: " + error.message);
+      }
+    };
+
+    window.updatePhoneByCourier = function() {
+      const courier = document.getElementById('courier').value;
+      const phoneSelect = document.getElementById('shopPhone');
+      phoneSelect.value = (courier === 'Anousith Express') ? '020 94036226' : '020 98052744';
+    };
+
+    window.updateEditPhoneByCourier = function() {
+      const courier = document.getElementById('editCourier').value;
+      const phoneSelect = document.getElementById('editShopPhone');
+      phoneSelect.value = (courier === 'Anousith Express') ? '020 94036226' : '020 98052744';
+    };
+
+    window.addOrder = async function() {
+      if (!currentUser) {
+        alert('กรุณาเข้าสู่ระบบก่อนเพิ่มออเดอร์');
+        return;
+      }
+      
+      const customer = document.getElementById('customerData').value.trim();
+      const courier = document.getElementById('courier').value;
+      const shopPhone = document.getElementById('shopPhone').value;
+      
+      if (!customer) {
+        alert('กรุณากรอกข้อมูลลูกค้า');
+        return;
+      }
+      
+      const phoneMatch = customer.match(/(020|030)\d{6,8}\b/);
+      if (!phoneMatch) {
+        alert('ไม่พบเบอร์โทรลูกค้า (รูปแบบ 020/030 ตามด้วยตัวเลข 6-8 หลัก)');
+        return;
+      }
+      const id = 'BN' + phoneMatch[0];
+      const date = new Date();
+      const barcode = Math.floor(100000000000 + Math.random() * 900000000000);
+      
+      try {
+        await addDoc(collection(db, "orders"), {
+          id,
+          customer,
+          courier,
+          date: date.toISOString(),
+          barcode,
+          shopPhone,
+          userId: currentUser.uid,
+          archived: false
+        });
+        
+        await loadOrders();
+        document.getElementById('customerData').value = '';
+      } catch (error) {
+        console.error("Error adding order:", error);
+        alert("เกิดข้อผิดพลาดในการเพิ่มออเดอร์: " + error.message);
+      }
+    };
+
+    window.renderOrders = function() {
+      const container = document.getElementById('orders');
+      container.innerHTML = '';
+      
+      if (orderList.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666;">ไม่มีออเดอร์ในขณะนี้</p>';
+        return;
+      }
+      
+      orderList.forEach((order, index) => {
+        const div = document.createElement('div');
+        div.className = 'order';
+        div.innerHTML = `
+          <input type="checkbox" data-index="${index}" checked>
+          <strong>Order ID:</strong> ${order.id}<br>
+          <strong>ขนส่ง:</strong> ${order.courier}<br>
+          <strong>เบอร์ร้าน:</strong> ${order.shopPhone}<br>
+          <strong>ลูกค้า:</strong><br> <pre>${order.customer}</pre>
+          <div class="action-buttons">
+            <button class="btn btn-primary" onclick="openEditOrderModal('${index}')">
+              <i class="fas fa-edit"></i> แก้ไข
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    };
+
+    window.renderArchivedOrders = function() {
+      const container = document.getElementById('archivedOrders');
+      container.innerHTML = '';
+
+      archivedOrderList.forEach((order, index) => {
+        const orderDate = new Date(order.date);
+        const dateStr = orderDate.toLocaleDateString('lo-LA') + ' ' + orderDate.toLocaleTimeString();
+    
+        const div = document.createElement('div');
+        div.className = 'order';
+        div.innerHTML = `
+          <div class="order-header">
+            <strong>${order.id}</strong>
+            <span class="order-date">${dateStr}</span>
+          </div>
+          <div><strong>ขนส่ง:</strong> ${order.courier}</div>
+          <div><strong>เบอร์ร้าน:</strong> ${order.shopPhone}</div>
+          <div class="customer-data"><strong>ลูกค้า:</strong><pre>${order.customer}</pre></div>
+          <div class="action-buttons">
+            <button class="btn btn-primary" onclick="printBillFromArchive(${index})">
+              <i class="fas fa-print"></i> พิมพ์บิล
+            </button>
+            <button class="btn btn-success" onclick="unarchiveOrder('${order._docId}')">
+              <i class="fas fa-undo"></i> นำออกจากคลัง
+           </button>
+         </div>
+       `;
+       container.appendChild(div);
+     });
+    };
+
+    window.searchArchivedOrders = function() {
+      const orderIdQuery = document.getElementById('searchOrderId').value.trim().toLowerCase();
+      const startDate = document.getElementById('searchStartDate').value;
+      const endDate = document.getElementById('searchEndDate').value;
+      
+      let filteredOrders = [...archivedOrderList];
+      
+      // ค้นหาตามเลขออเดอร์
+      if (orderIdQuery) {
+        filteredOrders = filteredOrders.filter(order => 
+          order.id.toLowerCase().includes(orderIdQuery)
+        );
+      }
+      
+      // ค้นหาตามวันที่
+      if (startDate) {
+        const start = new Date(startDate);
+        filteredOrders = filteredOrders.filter(order => 
+          new Date(order.date) >= start
+        );
+      }
+      
+      if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999); // ตั้งเวลาเป็นสิ้นวัน
+        filteredOrders = filteredOrders.filter(order => 
+          new Date(order.date) <= end
+        );
+      }
+      
+      renderFilteredArchivedOrders(filteredOrders);
+    };
+
+    window.renderFilteredArchivedOrders = function(orders) {
+      const container = document.getElementById('archivedOrders');
+      container.innerHTML = '';
+
+      if (orders.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666;">ไม่พบออเดอร์ที่ตรงกับการค้นหา</p>';
+        return;
+      }
+
+      orders.forEach((order, index) => {
+        const orderDate = new Date(order.date);
+        const dateStr = orderDate.toLocaleDateString('lo-LA') + ' ' + orderDate.toLocaleTimeString();
+        
+        const div = document.createElement('div');
+        div.className = 'order';
+        div.innerHTML = `
+          <div class="order-header">
+            <strong>${order.id}</strong>
+            <span class="order-date">${dateStr}</span>
+          </div>
+          <div><strong>ขนส่ง:</strong> ${order.courier}</div>
+          <div><strong>เบอร์ร้าน:</strong> ${order.shopPhone}</div>
+          <div class="customer-data"><strong>ลูกค้า:</strong><pre>${order.customer}</pre></div>
+          <div class="action-buttons">
+            <button class="btn btn-primary" onclick="printBillFromArchive(${archivedOrderList.findIndex(o => o._docId === order._docId)})">
+              <i class="fas fa-print"></i> พิมพ์บิล
+            </button>
+            <button class="btn btn-success" onclick="unarchiveOrder('${order._docId}')">
+              <i class="fas fa-undo"></i> นำออกจากคลัง
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    };
+
+    window.clearSearch = function() {
+      document.getElementById('searchOrderId').value = '';
+      document.getElementById('searchStartDate').value = '';
+      document.getElementById('searchEndDate').value = '';
+      renderArchivedOrders();
+    };
+    
+    window.openEditOrderModal = function(index) {
+      const order = orderList[index];
+      document.getElementById('editCustomerData').value = order.customer;
+      document.getElementById('editCourier').value = order.courier;
+      document.getElementById('editShopPhone').value = order.shopPhone;
+      document.getElementById('editOrderId').value = order._docId;
+      openModal('editOrderModal');
+    };
+
+    window.updateOrder = async function() {
+      const docId = document.getElementById('editOrderId').value;
+      const customer = document.getElementById('editCustomerData').value.trim();
+      const courier = document.getElementById('editCourier').value;
+      const shopPhone = document.getElementById('editShopPhone').value;
+      const updateBtn = document.getElementById('updateOrderBtn');
+      const errorElement = document.getElementById('editOrderError');
+      
+      if (!customer) {
+        errorElement.textContent = 'กรุณากรอกข้อมูลลูกค้า';
+        return;
+      }
+      
+      try {
+        updateBtn.innerHTML = '<i class="fas fa-spinner spinner"></i> กำลังอัปเดต...';
+        await updateDoc(doc(db, "orders", docId), {
+          customer,
+          courier,
+          shopPhone
+        });
+        
+        closeModal('editOrderModal');
+        await loadOrders();
+      } catch (error) {
+        console.error("Error updating order:", error);
+        errorElement.textContent = 'เกิดข้อผิดพลาดในการอัปเดตออเดอร์';
+      } finally {
+        updateBtn.innerHTML = '<i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง';
+      }
+    };
+
+    window.selectAll = function(checked) {
+      document.querySelectorAll('#orders input[type=checkbox]').forEach(c => c.checked = checked);
+    };
+
+    window.generateBarcodeSVG = function(barcodeNumber) {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      JsBarcode(svg, barcodeNumber.toString(), {
+        format: "CODE128", lineColor: "#000", width: 2, height: 50, displayValue: false
+      });
+      return svg.outerHTML;
+    };
+
+    window.printBill = function(order) {
+      const dateStr = new Date(order.date).toLocaleString();
+      const barcodeSVG = generateBarcodeSVG(order.barcode);
+      return `
+        <div class="bill">
+          <div class="header" style="border: 1px solid #000; padding: 5px; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center;">
+              <div class="logo">BN</div>
+              <div class="shop-info">
+               <div style="font-weight: bold; text-align: center;">ຮ້ານ : BN Shop</div>
+               <div style="text-align: center;">ເບີໂທ : ${order.shopPhone}</div>
+              </div>
+            </div>
+          </div>
+          <div class="section">
+            <strong>ວັນທີ:</strong> ${dateStr}<br>
+            <strong>ລະຫັດອອເດີ:</strong> ${order.id.replace('BN', '')}
+          </div>
+          <div class="barcode-container">
+            ${barcodeSVG}
+            <div class="barcode-number">${order.barcode}</div>
+          </div>
+          <div class="section">
+            <strong>ຂົນສົ່ງ:</strong> ${order.courier}<br>
+            <strong>ຂໍ້ມູນລູກຄ້າ:</strong><br><pre>${order.customer.replace(/\n/g, '<br>')}</pre>
+          </div>
+          <div class="thankyou">ຂອບໃຈ💗</div>
+        </div>
+      `;
+    };
+    window.printBills = function(orders) {
+      const win = window.open('', '_blank');
+      win.document.write(`
+        <html><head><title>Print Bills</title><style>
+          @page { size: 80mm 150mm; margin: 0; }
+          body { margin: 0; padding: 0; font-family: 'Noto Sans Lao', sans-serif; }
+          .bill { width: 76mm; min-height: 130mm; padding: 10px; font-size: 14px; border: 1px solid #000; page-break-after: always; }
+          .logo { font-size: 32px; font-weight: bold; display: inline-block; margin-right: 10px; }
+          .shop-info { display: inline-block; vertical-align: middle; line-height: 1.4; white-space: nowrap; }
+          .header { margin-bottom: 10px; }
+          .section { margin-top: 10px; }
+          .barcode-container { text-align: center; margin: 15px 0; }
+          .barcode-number { text-align: center; font-family: monospace; font-size: 12px; margin-top: 5px; }
+          .thankyou { text-align: center; margin-top: 20px; font-weight: bold; }
+          pre { white-space: pre-wrap; word-wrap: break-word; margin: 0; line-height: 1.4; }
+        </style></head><body>
+      `);
+      orders.forEach(order => win.document.write(printBill(order)));
+      win.document.write('</body></html>');
+      win.document.close();
+      setTimeout(() => win.print(), 500);
+    };
+
+    window.printSelected = function() {
+      const checkboxes = document.querySelectorAll('#orders input[type=checkbox]');
+      const selected = Array.from(checkboxes).filter(c => c.checked).map(c => orderList[c.dataset.index]);
+      if (!selected.length) return alert('กรุณาเลือกออเดอร์');
+      printBills(selected);
+    };
+
+    window.printAll = function() {
+      if (!orderList.length) return alert('ไม่มีออเดอร์');
+      printBills(orderList);
+    };
+
+    window.printBillFromArchive = function(index) {
+      const order = archivedOrderList[index];
+      printBills([order]);
+    };
+
+    window.deleteSelected = async function() {
+      const checkboxes = document.querySelectorAll('#orders input[type=checkbox]');
+      const selected = Array.from(checkboxes).filter(c => c.checked);
+      if (!selected.length) return alert('กรุณาเลือกออเดอร์ที่จะลบ');
+
+      const confirmDelete = confirm('คุณแน่ใจว่าจะลบออเดอร์ที่เลือก?');
+      if (!confirmDelete) return;
+
+      try {
+        for (const c of selected) {
+          const index = c.dataset.index;
+          const docId = orderList[index]._docId;
+          await deleteDoc(doc(db, "orders", docId));
+        }
+        await loadOrders();
+      } catch (error) {
+        console.error("Error deleting orders:", error);
+        alert("เกิดข้อผิดพลาดในการลบออเดอร์: " + error.message);
+      }
+    };
+
+    window.archiveSelected = async function() {
+      const checkboxes = document.querySelectorAll('#orders input[type=checkbox]');
+      const selected = Array.from(checkboxes).filter(c => c.checked);
+      if (!selected.length) return alert('กรุณาเลือกออเดอร์ที่จะเก็บเข้าคลัง');
+
+      const confirmArchive = confirm('คุณแน่ใจว่าจะเก็บออเดอร์ที่เลือกเข้าคลัง?');
+      if (!confirmArchive) return;
+
+      try {
+        for (const c of selected) {
+          const index = c.dataset.index;
+          const docId = orderList[index]._docId;
+          await updateDoc(doc(db, "orders", docId), {
+            archived: true
+          });
+        }
+        await loadOrders();
+        alert('เก็บออเดอร์เข้าคลังเรียบร้อยแล้ว');
+      } catch (error) {
+        console.error("Error archiving orders:", error);
+        alert("เกิดข้อผิดพลาดในการเก็บออเดอร์เข้าคลัง: " + error.message);
+      }
+    };
+
+    window.unarchiveOrder = async function(docId) {
+      try {
+        await updateDoc(doc(db, "orders", docId), {
+          archived: false
+        });
+        await loadOrders();
+        alert('นำออเดอร์ออกจากคลังเรียบร้อยแล้ว');
+      } catch (error) {
+        console.error("Error unarchiving order:", error);
+        alert("เกิดข้อผิดพลาดในการนำออเดอร์ออกจากคลัง: " + error.message);
+      }
+    };
+
+    window.showArchive = function() {
+      document.getElementById('currentOrdersSection').style.display = 'none';
+      document.getElementById('archiveSection').style.display = 'block';
+      document.getElementById('searchOrderId').value = '';
+      document.getElementById('searchStartDate').value = '';
+      document.getElementById('searchEndDate').value = '';
+      renderArchivedOrders();
+    };
+
+    window.backToCurrentOrders = function() {
+      document.getElementById('currentOrdersSection').style.display = 'block';
+      document.getElementById('archiveSection').style.display = 'none';
+    };
+  </script>
+</body>
+</html>
+    
+
+  
+    
